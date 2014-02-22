@@ -48,7 +48,7 @@ for ind in range(0,len(paths)):
     try:
         print('   %s is a duplicate of\n      %s'%(path,hashes[hash]))
     except KeyError:
-        pass
+        hashes[hash] = path
 
 print('Quitting.\nHave a nice day!')
 
