@@ -35,17 +35,20 @@ for root, dirs, files in os.walk(rootdir, topdown=False):
         paths.append(os.path.join(root,name))
 
 hashes = []
-
 errfiles = []
+duplicatehashes = []
 
 
 print('Computing sha256 digest for %d files'%(len(paths)))
 
-for path in paths:
+
+
+for ind in range(0,len(paths)):
+    path = paths[ind]
     try:
         hashes.append(hashfile(open(path, 'rb')) )
         hashedpaths.append(path)
-        print('sha256 digest for %s:\n\t%s'%(path,hashes[-1]))
+        print('sha256 digest for file %d/%d %s:\n\t%s'%(ind,len(paths),path,hashes[-1]))
     except IOError:
         print('could not compute digest for %s'%(path,))
         errfiles.append(path)
@@ -56,8 +59,9 @@ for ind in range(0,len(hashes)):
     hash = hashes[ind]
     path = hashedpaths[ind]
     duplicateCount = hashes.count(hash)-1
-    if duplicateCount:
-        print('file %s has %d duplicate(s):'%(path,duplicateCount))
+    if duplicateCount and (hash not in duplicatehashes):
+        duplicatehashes.append(hash)
+        print('file %d/%d:  %s has %d duplicate(s):'%(ind,len(hashes),path,duplicateCount))
         for ind2 in range(ind+1,len(hashes)):
             if hashes[ind2] == hash:
                 print('\t%s'%(hashedpaths[ind2],))
