@@ -27,6 +27,7 @@ except IndexError:
     rootdir =  './'
 
 paths = []
+hashedpaths = []
 
 import os
 for root, dirs, files in os.walk(rootdir, topdown=False):
@@ -42,24 +43,24 @@ print('Computing sha256 digest for %d files'%(len(paths)))
 
 for path in paths:
     try:
-        hashes += [hashfile(open(path, 'rb')) ]
+        hashes.append(hashfile(open(path, 'rb')) )
+        hashedpaths.append(path)
         print('sha256 digest for %s:\n\t%s'%(path,hashes[-1]))
     except IOError:
         print('could not compute digest for %s'%(path,))
-        paths.remove(path)
         errfiles.append(path)
 
 print('Digests done. Finding duplicates.')
 
 for ind in range(0,len(hashes)):
     hash = hashes[ind]
-    path = paths[ind]
+    path = hashedpaths[ind]
     duplicateCount = hashes.count(hash)-1
     if duplicateCount:
-        print('file %s has %d duplicates:'%(path,duplicateCount))
+        print('file %s has %d duplicate(s):'%(path,duplicateCount))
         for ind2 in range(ind+1,len(hashes)):
             if hashes[ind2] == hash:
-                print('\t%s'%(paths[ind2],))
+                print('\t%s'%(hashedpaths[ind2],))
 
 print('The following files could not be inspected for whatever reason')
 for errfile in errfiles:
