@@ -40,13 +40,13 @@ print('%d files found in total , computing sha256 digests to find duplicates...'
 
 for ind in range(0,len(paths)):
     path = paths[ind]
-    print('inspecting file %d/%d'%(ind,len(paths)))
+    print('inspecting file %d/%d ...'%(ind,len(paths)))
     try:
         hash = hashfile(open(path, 'rb')) 
     except IOError:
-        print('could not compute digest for %s'%(path,))
+        print('   could not compute digest for %s'%(path,))
     try:
-        print('%s is a duplicate of\n\t%s'%(path,hashes[hash]))
+        print('   %s is a duplicate of\n      %s'%(path,hashes[hash]))
     except KeyError:
         pass
 
