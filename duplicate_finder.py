@@ -42,13 +42,12 @@ for ind in range(0,len(paths)):
     path = paths[ind]
     try:
         hash = hashfile(open(path, 'rb')) 
-        if hash not in hashes.keys():
-            hashes[hash] = path
-        else:
-            print('%s is a duplicate of:\n\t %s'%(path,hashes[hash]))
     except IOError:
         print('could not compute digest for %s'%(path,))
-        errfiles.append(path)
+    try:
+        print('could not compute digest for %s'%(path,))
+    except KeyError:
+        pass
 
 print('Quitting.\nHave a nice day!')
 
