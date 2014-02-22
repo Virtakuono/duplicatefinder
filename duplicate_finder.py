@@ -55,7 +55,7 @@ for ind in range(0,len(hashes)):
     hash = hashes[ind]
     path = paths[ind]
     duplicateCount = hashes.count(hash)-1
-    if not duplicateCount:
+    if duplicateCount:
         print('file %s has %d duplicates:'%(path,duplicateCount))
         for ind2 in range(ind+1,len(hashes)):
             if hashes[ind2] == hash:
