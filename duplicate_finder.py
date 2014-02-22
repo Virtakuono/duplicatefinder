@@ -29,7 +29,7 @@ except IndexError:
 
 paths = []
 
-print('Scanning files in %s'%())
+print('Scanning files in %s ...'%(rootdir,))
 for root, dirs, files in os.walk(rootdir, topdown=False):
     for name in files:
         paths.append(os.path.join(root,name))
@@ -40,12 +40,13 @@ print('%d files found in total , computing sha256 digests to find duplicates...'
 
 for ind in range(0,len(paths)):
     path = paths[ind]
+    print('inspecting file %d/%d'%(ind,len(paths)))
     try:
         hash = hashfile(open(path, 'rb')) 
     except IOError:
         print('could not compute digest for %s'%(path,))
     try:
-        print('could not compute digest for %s'%(path,))
+        print('%s is a duplicate of\n\t%s'%(path,hashes[hash]))
     except KeyError:
         pass
 
