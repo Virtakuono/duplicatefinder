@@ -7,6 +7,7 @@
 # I bet there are a gazillion implementations of this already
 # floating around, most of which more elegant and fast than mine.
 
+# Thanks for the remarks on bad programming style to Liam Mencel.
 
 import os,sys,hashlib
 
@@ -27,49 +28,28 @@ except IndexError:
     rootdir =  './'
 
 paths = []
-hashedpaths = []
 
-import os
+print('Scanning files in %s'%())
 for root, dirs, files in os.walk(rootdir, topdown=False):
     for name in files:
         paths.append(os.path.join(root,name))
 
-hashes = []
-errfiles = []
-duplicatehashes = []
+hashes = {}
 
-
-print('Computing sha256 digest for %d files'%(len(paths)))
-
-
+print('%d files found in total , computing sha256 digests to find duplicates...'%(len(paths)))
 
 for ind in range(0,len(paths)):
     path = paths[ind]
     try:
-        hashes.append(hashfile(open(path, 'rb')) )
-        hashedpaths.append(path)
-        print('sha256 digest for file %d/%d %s:\n\t%s'%(ind,len(paths),path,hashes[-1]))
+        hash = hashfile(open(path, 'rb')) 
+        if hash not in hashes.keys():
+            hashes[hash] = path
+        else:
+            print('%s is a duplicate of:\n\t %s'%(path,hashes[hash]))
     except IOError:
         print('could not compute digest for %s'%(path,))
         errfiles.append(path)
 
-print('Digests done. Finding duplicates.')
-
-for ind in range(0,len(hashes)):
-    hash = hashes[ind]
-    path = hashedpaths[ind]
-    duplicateCount = hashes.count(hash)-1
-    if duplicateCount and (hash not in duplicatehashes):
-        duplicatehashes.append(hash)
-        print('file %d/%d:  %s has %d duplicate(s):'%(ind,len(hashes),path,duplicateCount))
-        for ind2 in range(ind+1,len(hashes)):
-            if hashes[ind2] == hash:
-                print('\t%s'%(hashedpaths[ind2],))
-
-print('The following files could not be inspected for whatever reason')
-for errfile in errfiles:
-    print('\t%s'%(errfile,))
-
-print('Have a nice day.')
+print('Quitting.\nHave a nice day!')
 
 
